@@ -1,9 +1,5 @@
 ﻿using Final_Task.Pages;
 using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Final_Task.Tests
 {

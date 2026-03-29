@@ -2,7 +2,7 @@
 using OpenQA.Selenium.Chrome;
 using OpenQA.Selenium.Support.UI;
 using Serilog;
-using Serilog.Sinks.File;
+using static System.Net.WebRequestMethods;
 
 namespace Final_Task.Tests
 {
@@ -10,30 +10,18 @@ namespace Final_Task.Tests
     {
         public IWebDriver driver;
         public WebDriverWait wait;
-        private const string BaseUrl = "https://automationteststore.com";
+        private readonly string BaseUrl = ConfigReader.Configuration["BaseUrl"] ?? "https://automationteststore.com";
 
         public BaseTest()
         {
-            var options = new ChromeOptions();
-
-            options.AddArgument("--incognito");
-            options.AddArgument("--disable-notifications");
-
-            options.AddUserProfilePreference("autofill.profile_enabled", false);
-            options.AddUserProfilePreference("credentials_enable_service", false);
-            options.AddUserProfilePreference("profile.password_manager_enabled", false);
-
-            options.AddArgument("--auto-open-devtools-for-testing");
-            options.AddArgument("--devtools-auto-open-on-launch");
-            options.AddUserProfilePreference("devtools.preferences.currentDockState", "\"bottom\"");
-
-            // Настраиваем логгер
+            string browser = ConfigReader.Configuration["BrowserSettings:DefaultBrowser"] ?? "chrome";
             Log.Logger = new LoggerConfiguration()
                 .WriteTo.File("logs/log.txt")
                 .CreateLogger();
 
-            driver = new ChromeDriver(options);
-            Log.Information("Start browser");
+            driver = WebDriverFactory.CreateDriver(browser);
+            Log.Information(Environment.NewLine + new string('=', 100));
+            Log.Information("Start <{Browser}> browser", browser);
 
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl(BaseUrl);
@@ -42,8 +30,13 @@ namespace Final_Task.Tests
 
         public void Dispose()
         {
-            driver?.Quit();
-            driver?.Dispose();
+            Log.Information("FINISHED TEST");
+            Log.Information(new string('=', 50));
+            if (driver != null)
+            {
+                driver?.Quit();
+                driver?.Dispose();
+            }
             Log.CloseAndFlush();
         }
     }

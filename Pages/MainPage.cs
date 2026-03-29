@@ -1,10 +1,6 @@
-﻿using Final_Task.Tests;
-using OpenQA.Selenium;
+﻿using OpenQA.Selenium;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
-
+/*
 namespace Final_Task.Pages
 {
     public class MainPage : BasePage
@@ -13,7 +9,6 @@ namespace Final_Task.Pages
         public MainPage(IWebDriver driver) : base(driver) { }
 
         private static By LoginOrRegister => By.Id("customer_menu_top");
-
         private static By Specials => By.CssSelector(".top.menu_specials");
 
         public LoginOrRegisterPage GoToLoginOrRegister()
@@ -31,3 +26,4 @@ namespace Final_Task.Pages
         }
     }
 }
+*/

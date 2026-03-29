@@ -1,9 +1,4 @@
 ﻿using Final_Task.Pages;
-using OpenQA.Selenium;
-using OpenQA.Selenium.Support.UI;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Final_Task.Tests
 {
@@ -12,10 +7,10 @@ namespace Final_Task.Tests
         [Fact]
         public void CreateAccount()
         {
-            var mainPage = new MainPage(driver);
+            var bainPage = new BasePage(driver);
             var user = new UserData();
 
-            var accountPage = mainPage
+            var accountPage = bainPage
                 .GoToLoginOrRegister()
                 .GoToRegister()
                 .FillFormAndSubmit(user)

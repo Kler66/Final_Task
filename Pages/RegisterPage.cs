@@ -1,9 +1,7 @@
 ﻿using OpenQA.Selenium;
 using OpenQA.Selenium.Support.UI;
+using SeleniumExtras.WaitHelpers;
 using Serilog;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Final_Task.Pages
 {
@@ -59,15 +57,17 @@ namespace Final_Task.Pages
         public string GetFirstNameError()
         {
             string xpath = "//div[contains(@class, 'form-group')][.//input[@id='AccountFrm_firstname']]//span[@class='help-block']";
-            var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            return wait.Until(d => d.FindElement(By.XPath(xpath)).Text);
+            //var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
+            var element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
+            return element.Text;
+            //return wait.Until(d => d.FindElement(By.XPath(xpath)).Text);
         }
 
         public RegisterPage Open()
         {
             if (!driver.Url.Contains("account/create"))
             {
-                new MainPage(driver).GoToLoginOrRegister().GoToRegister();
+                new BasePage(driver).GoToLoginOrRegister().GoToRegister();
                 Log.Information("Go to <Register> page");
             }
             return this;

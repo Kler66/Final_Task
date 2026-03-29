@@ -1,7 +1,4 @@
 ﻿using Final_Task.Pages;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Final_Task.Tests
 {
@@ -10,7 +7,7 @@ namespace Final_Task.Tests
         [Fact]
         public void AllProductsHaveDiscount()
         {
-            var mainPage = new MainPage(driver);
+            var mainPage = new BasePage(driver);
             var specialsPage = mainPage.GoSpecials();
             var cards = specialsPage.GetAllProducts();
 
