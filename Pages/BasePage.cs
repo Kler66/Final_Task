@@ -2,7 +2,6 @@
 using OpenQA.Selenium.Support.UI;
 using SeleniumExtras.WaitHelpers;
 using Serilog;
-using Serilog.Sinks.File;
 
 namespace Final_Task.Pages
 {
@@ -59,6 +58,22 @@ namespace Final_Task.Pages
             catch (Exception ex)
             {
                 Log.Error("WRITE FAILED: {Locator}. Error: {Message}", locator, ex.Message);
+                throw;
+            }
+        }
+
+        protected string GetText(By locator)
+        {
+            try
+            {
+                var element = wait.Until(ExpectedConditions.ElementIsVisible(locator));
+                string text = element.Text;
+                Log.Information("Read text: '{Text}' from: {Locator}", text, locator);
+                return text;
+            }
+            catch (Exception ex)
+            {
+                Log.Error("READ TEXT FAILED: {Locator}. Error: {Message}", locator, ex.Message);
                 throw;
             }
         }

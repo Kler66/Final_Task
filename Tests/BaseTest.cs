@@ -9,7 +9,6 @@ namespace Final_Task.Tests
     public class BaseTest : IDisposable
     {
         public IWebDriver driver;
-        public WebDriverWait wait;
         private readonly string BaseUrl = ConfigReader.Configuration["BaseUrl"] ?? "https://automationteststore.com";
 
         public BaseTest()
@@ -25,7 +24,6 @@ namespace Final_Task.Tests
 
             driver.Manage().Window.Maximize();
             driver.Navigate().GoToUrl(BaseUrl);
-            //driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(10);
         }
 
         public void Dispose()

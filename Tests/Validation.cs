@@ -1,5 +1,6 @@
 ﻿using Final_Task.Pages;
 using OpenQA.Selenium;
+using FluentAssertions;
 
 namespace Final_Task.Tests
 {
@@ -12,23 +13,40 @@ namespace Final_Task.Tests
             driver = fixture.driver;
         }
 
-        [Theory]
-        [InlineData("")]
-        [InlineData("333333333333333333333333333333333")]
-        public void ValidationLoginName(string input)
+        public static TheoryData<string, bool> LoginValidationData => new()
         {
-            string expectedError = "First Name must be between 1 and 32 characters!";
+            { "", true },
+            { "4444", true },
+            { new string('a', 65), true },
+            { "user123@#$", true },
+            { "+_-+_$@#^!*",  true },
+            { "user" + Guid.NewGuid().ToString("N").Substring(0, 8), false },
+            { "5fiv5", false },
+            { (Guid.NewGuid().ToString("N") + Guid.NewGuid().ToString("N")), false },
+        };
+
+        [Theory]
+        [MemberData(nameof(LoginValidationData))]
+        public void ValidationLoginName(string input, bool isError)
+        {
+            string expectedError = "Login name must be alphanumeric only and between 5 and 64 characters!";
 
             var error = new RegisterPage(driver)
                 .Open()
-                .FillFirstName(input)
-                .ClickSubmitExpectError()
-                .GetFirstNameError();
-            /*
-            registerPage
-                .FillFirstName(input).ClickSubmitExpectError();
-            */
-            Assert.Contains(expectedError, error);
+                .FillLoginName(input)
+                .ClickSubmitExpectError();
+
+
+            if (isError)
+            {
+                string errorMessage = error.GetLoginNameError();
+                errorMessage.Should().Be(expectedError);
+            }
+            else
+            {
+                bool isInvisible = error.IsLoginNameErrorInvisible();
+                isInvisible.Should().BeTrue();
+            }
         }
     }
 }

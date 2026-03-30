@@ -21,15 +21,17 @@ namespace Final_Task.Pages
         private static By SubmitButton => By.CssSelector(".btn-orange.pull-right");
         private static By DoNotSubscribe => By.Id("AccountFrm_newsletter0");
         private static By AcceptPolicy => By.Id("AccountFrm_agree");
+        private static By LoginNameError => By.CssSelector(".input-group:has(#AccountFrm_loginname) + .help-block");
+        private static By RegionState => By.Id("AccountFrm_zone_id");
 
         public SuccessPage FillFormAndSubmit(UserData user)
         {
-            FillFirstName(user.FirstName);
+            Write(FirstName, user.FirstName);
             Write(LastName, user.LastName);
             Write(Email, user.Email);
             Write(Address, user.Address);
             Write(City, user.City);
-            var regionState = driver.FindElement(By.Id("AccountFrm_zone_id"));
+            var regionState = driver.FindElement(RegionState);
             var selectElement = new SelectElement(regionState);
             selectElement.SelectByText(user.RegionState);
             Write(ZIPCode, user.ZIPCode);
@@ -48,19 +50,15 @@ namespace Final_Task.Pages
             return this;
         }
 
-        public RegisterPage FillFirstName(string name)
+        public RegisterPage FillLoginName(string name)
         {
-            Write(FirstName, name);
+            Write(LoginName, name);
             return this;
         }
 
-        public string GetFirstNameError()
+        public string GetLoginNameError()
         {
-            string xpath = "//div[contains(@class, 'form-group')][.//input[@id='AccountFrm_firstname']]//span[@class='help-block']";
-            //var wait = new WebDriverWait(driver, TimeSpan.FromSeconds(10));
-            var element = wait.Until(ExpectedConditions.ElementIsVisible(By.XPath(xpath)));
-            return element.Text;
-            //return wait.Until(d => d.FindElement(By.XPath(xpath)).Text);
+            return GetText(LoginNameError);
         }
 
         public RegisterPage Open()
@@ -71,6 +69,18 @@ namespace Final_Task.Pages
                 Log.Information("Go to <Register> page");
             }
             return this;
+        }
+
+        public bool IsLoginNameErrorInvisible()
+        {
+            try
+            {
+                return wait.Until(ExpectedConditions.InvisibilityOfElementLocated(LoginNameError));
+            }
+            catch (WebDriverTimeoutException)
+            {
+                return false;
+            }
         }
     }
 }
